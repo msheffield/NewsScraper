@@ -1,0 +1,20 @@
+{
+  "name": "newsscraper",
+  "version": "1.0.0",
+  "description": "Scrapper that takes stories from Joshs Frogs",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/msheffield/NewsScraper.git"
+  },
+  "author": "Maxwell Sheffield",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/msheffield/NewsScraper/issues"
+  },
+  "homepage": "https://github.com/msheffield/NewsScraper#readme"
+}
