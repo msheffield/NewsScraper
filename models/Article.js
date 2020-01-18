@@ -1,4 +1,4 @@
-const mongoose = require("mongoose");
+var mongoose = require("mongoose");
 
 var Schema = mongoose.Schema;
 
@@ -9,6 +9,10 @@ var ArticleSchema = new Schema({
   },
   link: {
     type: String,
+    required: true
+  },
+  saved: {
+    type: Boolean,
     required: true
   },
   description: {
