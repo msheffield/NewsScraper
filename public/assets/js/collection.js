@@ -1,10 +1,28 @@
 $(document).ready(function () {
+    console.log("Loaded collection page");
+    loadSavedArticles();
 
-    // Scrape for articles
-    $.getJSON("/collection", function (data) {
+    $(document).on("click", ".unsave-button", function () {
+        let id = $(this).attr("data-id");
+
+        $.ajax({
+            method: "POST",
+            url: "/unsave/" + id,
+            data: {
+                saved: false
+            }
+        }).done(function (data) {
+            console.log("Data: " + data);
+        });
+    });
+});
+
+// Load Saved Articles from DB
+function loadSavedArticles() {
+    $.getJSON("/saved", function (data) {
         console.log("getting articles...");
         for (let i = 0; i < data.length; i++) {
-            let card = $("<div>", { id: data[i]._id, "class":"card" });
+            let card = $("<div>", { id: data[i]._id, "class": "card" });
 
             let cardBody = $("<div>", { "class": "card-body" });
 
@@ -18,6 +36,9 @@ $(document).ready(function () {
             let description = $("<p>", { "class": "card-text" }).text(data[i].description + "...");
             cardBody.append(description);
 
+            let noteButton = $("<button>", { "data-id": data[i]._id, "class": "note-button button" }).text("View Note")
+            cardBody.append(description);
+
             let unSaveButton = $("<button>", { "data-id": data[i]._id, "class": "unsave-button button" }).text("Save This!");
             cardBody.append(unSaveButton);
 
@@ -26,18 +47,4 @@ $(document).ready(function () {
             $("#saved-articles").append(card);
         }
     });
-
-    $(document).on("click", ".unsave-button", function() {
-        let id = $(this).attr("data-id");
-
-        $.ajax({
-            method: "POST",
-            url: "/unsave/" + id,
-            data: {
-                saved: false
-            }
-        }).done(function(data) {
-            console.log("Data: " + data);
-        });
-    });
-});
+}

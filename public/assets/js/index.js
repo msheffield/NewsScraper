@@ -1,10 +1,42 @@
 $(document).ready(function () {
+    console.log("loaded index page");
+    loadArticles();
 
-    // Scrape for articles
+    $(document).on("click", "#scrape-button", function () {
+        let id = $(this).attr("data-id");
+
+        $.ajax({
+            method: "GET",
+            url: "/scrape",
+            data: {
+                saved: true
+            }
+        }).done(function (data) {
+            window.location = "/";
+        });
+    });
+
+    $(document).on("click", ".save-button", function () {
+        let id = $(this).attr("data-id");
+
+        $.ajax({
+            method: "POST",
+            url: "/save/" + id,
+            data: {
+                saved: true
+            }
+        }).done(function (data) {
+            window.location = "/";
+        });
+    });
+});
+
+// Load Unsaved Articles from DB
+function loadArticles() {
     $.getJSON("/articles", function (data) {
-        console.log("getting articles...")
+        console.log("fetching articles...")
         for (let i = 0; i < data.length; i++) {
-            let card = $("<div>", { id: data[i]._id, "class":"card" });
+            let card = $("<div>", { id: data[i]._id, "class": "card" });
 
             let cardBody = $("<div>", { "class": "card-body" });
 
@@ -26,32 +58,5 @@ $(document).ready(function () {
             $("#scraped-articles").append(card);
         }
     });
-
-    $(document).on("click", "#scrape-button", function() {
-        let id = $(this).attr("data-id");
-
-        $.ajax({
-            method: "GET",
-            url: "/scrape",
-            data: {
-                saved: true
-            }
-        }).done(function(data) {
-            window.location = "/";
-        });
-    });
-
-    $(document).on("click", ".save-button", function() {
-        let id = $(this).attr("data-id");
-
-        $.ajax({
-            method: "POST",
-            url: "/save/" + id,
-            data: {
-                saved: true
-            }
-        }).done(function(data) {
-            window.location = "/";
-        });
-    });
-});
+    console.log("fetched articles")
+}

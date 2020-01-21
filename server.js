@@ -72,6 +72,7 @@ app.get("/scrape", function (req, res) {
 
 // GET route to retreive unsaved articles
 app.get("/articles", function (req, res) {
+  console.log("Received get articles");
   db.Article.find({ "saved": false })
     .then(function (dbArticles) {
       res.json(dbArticles);
@@ -100,7 +101,8 @@ app.post("/save/:id", function (req, res) {
 
 
 // GET route to retreive all saved articles
-app.get("/collection", function (req, res) {
+app.get("/saved", function (req, res) {
+  console.log("Received get collection");
   db.Article.find({ "saved": true })
     .then(function (dbArticles) {
       res.json(dbArticles);
