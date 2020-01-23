@@ -113,10 +113,12 @@ app.get("/saved", function (req, res) {
 });
 
 // GET route to retreive specific article and note
-app.get("articles/:id", function (req, res) {
-  db.Article.findOne({ _id: req.params.id })
+app.get("/article/:id", function (req, res) {
+  console.log("received get article");
+  db.Article.findOne({ _id:req.params.id })
     .populate("comment")
     .then(function (dbArticle) {
+      console.log(dbArticle);
       res.json(dbArticle);
     })
     .catch(function (err) {
@@ -136,11 +138,28 @@ app.post("/unsave/:id", function (req, res) {
     });
 });
 
-// POST route to update comment
-app.post("/articles/:id", function (req, res) {
-  db.Comment.create(req.body)
+// POST route to delete comment
+app.post("/addComment/:id", function (req, res) {
+  let newComment = {};
+
+  newComment.body = req.body.body;
+  console.log(newComment);
+
+  db.Comment.create(newComment)
     .then(function (dbComment) {
-      return db.Article.findOneAndUpdate({ _id: req.params.id }, { "comment": dbComment._id }, { new: true });
+      console.log("created comment: " + dbComment.body);
+      return db.Article.findOneAndUpdate({ _id: req.params.id }, { $push: { "comment": dbComment._id } }, { new: true });
+    })
+    .catch(function (err) {
+      res.json(err);
+    });
+});
+
+// POST route to delete comment
+app.post("/deleteComment/:id", function (req, res) {
+  db.Comment.deleteOne({ _id: ObjectId(req.params.id) })
+    .then(function (dbComment) {
+      console.log("deteleted article with ID: " + req.params.id);
     })
     .catch(function (err) {
       res.json(err);
